@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { PaletteSelector } from '../PaletteSelector'
 import { ColorDisplay } from '../ColorDisplay'
+import { GameBoyImage } from '../GameBoyImage'
 import { readPaletteFile, getAllPalettes } from '@/lib/utils'
 import { Palette, GroupedPalettes } from '@/lib/types'
 
@@ -106,21 +107,41 @@ export const PaletteBrowser = () => {
       </div>
       
       {paletteData && (
-        <div className="flex items-start gap-6">
-          {paletteData.colors.map((color, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
-              <div className="text-sm font-medium text-gray-300">
-                C{index}
+        <>
+          <div className="flex items-start gap-6">
+            {paletteData.colors.map((color, index) => (
+              <div key={index} className="flex flex-col items-center gap-2">
+                <div className="text-sm font-medium text-gray-300">
+                  C{index}
+                </div>
+                <ColorDisplay
+                  color={color}
+                  index={index}
+                  isPopupOpen={openPopupIndex === index}
+                  onPopupToggle={() => setOpenPopupIndex(openPopupIndex === index ? null : index)}
+                />
               </div>
-              <ColorDisplay
-                color={color}
-                index={index}
-                isPopupOpen={openPopupIndex === index}
-                onPopupToggle={() => setOpenPopupIndex(openPopupIndex === index ? null : index)}
+            ))}
+          </div>
+
+          <div className="w-full max-w-3xl flex items-center lg:flex-row flex-col gap-4 justify-center">
+            <GameBoyImage
+              src="/screenshots/Tetris.png"
+              palette={paletteData.colors}
+              className="rounded-sm"
               />
-            </div>
-          ))}
-        </div>
+             <GameBoyImage
+              src="/screenshots/Pkmn-Yellow.png"
+              palette={paletteData.colors}
+              className="rounded-sm"
+              />
+             <GameBoyImage
+              src="/screenshots/Zelda.png"
+              palette={paletteData.colors}
+              className="rounded-sm"
+            />
+          </div>
+        </>
       )}
       
       <div className="text-sm text-gray-400">
