@@ -62,7 +62,7 @@ export const GameBoyImage = ({ src, palette, className = '' }: GameBoyImageProps
     <Image
       src={processedImage}
       alt="Game Boy Screenshot with custom palette"
-      className={className}
+      className={`[image-rendering:pixelated] ${className}`}
       width={160*2}
       height={140*2}
     />
