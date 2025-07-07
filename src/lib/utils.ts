@@ -17,6 +17,20 @@ export const rgbToIps = (rgb: { r: number, g: number, b: number }): { r: number,
   }
 }
 
+export const formatPaletteName = (palettePath: string): string => {
+  // Extract the filename without extension and path
+  const filename = palettePath.split('/').pop()?.replace('.pal', '') || ''
+  
+  // Replace underscores, hyphens and other common separators with spaces
+  return filename
+    .replace(/[_\-+]/g, ' ')  // Replace underscores, hyphens, and plus signs with spaces
+    .replace(/\s+/g, ' ')     // Replace multiple spaces with a single space
+    .replace(/\(\s*/g, '(')   // Remove spaces after opening parentheses
+    .replace(/\s*\)/g, ')')   // Remove spaces before closing parentheses
+    .replace(/\s*,\s*/g, ', ') // Ensure consistent spacing around commas
+    .trim()                    // Remove leading/trailing spaces
+}
+
 export const readPaletteFile = async (filePath: string): Promise<Palette> => {
   const response = await fetch(filePath)
   const buffer = await response.arrayBuffer()
@@ -34,7 +48,7 @@ export const readPaletteFile = async (filePath: string): Promise<Palette> => {
   }
 
   return {
-    name: filePath.split('/').pop()?.replace('.pal', '') || 'Unknown',
+    name: formatPaletteName(filePath),
     colors
   }
 }
