@@ -11,9 +11,9 @@ export const hexToRgb = (hex: string): { r: number, g: number, b: number } => {
 
 export const rgbToIps = (rgb: { r: number, g: number, b: number }): { r: number, g: number, b: number } => {
   return {
-    r: Math.ceil(rgb.r / 8),
-    g: Math.ceil(rgb.g / 4),
-    b: Math.ceil(rgb.b / 8)
+    r: Math.min(31, Math.round(rgb.r * 31 / 255)),
+    g: Math.min(63, Math.round(rgb.g * 63 / 255)),
+    b: Math.min(31, Math.round(rgb.b * 31 / 255))
   }
 }
 
