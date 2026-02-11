@@ -18,6 +18,7 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
   const [searchTerm, setSearchTerm] = useState('')
   const [filteredPalettes, setFilteredPalettes] = useState<string[]>([])
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const currentPaletteRef = useRef<HTMLButtonElement>(null)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -30,6 +31,50 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  // Focus current palette when opening dropdown
+  useEffect(() => {
+    if (!isOpen || !currentPaletteRef.current)
+        return
+
+    currentPaletteRef.current.scrollIntoView(false)
+  }, [isOpen, currentPaletteRef]);
+
+  // Allow selecting palettes with Left/Right arrow keys
+  const handlePrevNext = (direction: 'prev' | 'next') => {
+    const currentIndex = filteredPalettes.indexOf(currentPalette)
+    let newIndex
+
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : filteredPalettes.length - 1
+    } else {
+      newIndex = currentIndex < filteredPalettes.length - 1 ? currentIndex + 1 : 0
+    }
+
+    onPaletteChange(filteredPalettes[newIndex])
+  }
+  
+  useEffect(() => {
+    if (filteredPalettes.length <= 1)
+      return
+    
+    function handleKeyDown(e: KeyboardEvent) {
+      switch (e.key) {
+        case "ArrowLeft":
+          handlePrevNext("prev")
+          break;
+        case "ArrowRight":
+          handlePrevNext("next")
+          break;
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [filteredPalettes.length, handlePrevNext]);
 
   useEffect(() => {
     const loadPalettes = async () => {
@@ -100,19 +145,6 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
     }
   }
 
-  const handlePrevNext = (direction: 'prev' | 'next') => {
-    const currentIndex = filteredPalettes.indexOf(currentPalette)
-    let newIndex
-
-    if (direction === 'prev') {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : filteredPalettes.length - 1
-    } else {
-      newIndex = currentIndex < filteredPalettes.length - 1 ? currentIndex + 1 : 0
-    }
-    
-    onPaletteChange(filteredPalettes[newIndex])
-  }
-
   const getCurrentPaletteName = () => {
     return formatPaletteName(currentPalette)
   }
@@ -167,6 +199,8 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
                   {palettes.map((palette) => (
                     <button
                       key={palette}
+                      id={palette === currentPalette ? "current-palette" : undefined}
+                      ref={palette === currentPalette ? currentPaletteRef : undefined}
                       className={`w-full text-left px-2 py-1 hover:bg-gray-800 text-white ${
                         palette === currentPalette ? 'bg-gray-800' : ''
                       }`}
