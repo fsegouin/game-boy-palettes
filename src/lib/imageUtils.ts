@@ -62,6 +62,8 @@ export const swapPaletteInImage = async (
         data[i + 2] = newColor.b
         // Alpha channel (data[i + 3]) remains unchanged
       }
+    } else {
+      throw new Error(`Detected non-grayscale color (${r}, ${g}, ${b})`)
     }
   }
 
