@@ -130,9 +130,11 @@ export const PaletteBrowser = () => {
         </>
       )}
 
-      <div className="text-sm text-gray-400 font-pixelify-sans">
-        {paletteCount.current} of {paletteCount.total} palettes
-      </div>
+      {paletteCount.total > 0 && (
+        <div className="text-sm text-gray-400 font-pixelify-sans">
+          {paletteCount.current} of {paletteCount.total} palettes
+        </div>
+      )}
     </div>
   )
 } 
