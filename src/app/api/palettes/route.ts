@@ -1,5 +1,5 @@
 import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { join, sep } from 'path'
 import { NextResponse } from 'next/server'
 import { GroupedPalettes } from '@/lib/types'
 
@@ -7,11 +7,11 @@ async function getPalettesInDir(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true })
   const files = await Promise.all(
     entries.map(async (entry) => {
-      const fullPath = join(dir, entry.name)
+      const fullPath = join(dir, entry.name).replaceAll('\\', '/')
       if (entry.isDirectory()) {
         return getPalettesInDir(fullPath)
       } else if (entry.name.endsWith('.pal')) {
-        return [fullPath.replace(process.cwd() + '/public', '')]
+        return [fullPath.replace(process.cwd().replaceAll('\\', '/') + '/public', '')]
       }
       return []
     })
