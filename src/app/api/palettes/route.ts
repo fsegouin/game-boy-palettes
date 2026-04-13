@@ -1,5 +1,5 @@
 import { readdir } from 'fs/promises'
-import { join, sep } from 'path'
+import { join } from 'path'
 import { NextResponse } from 'next/server'
 import { GroupedPalettes } from '@/lib/types'
 

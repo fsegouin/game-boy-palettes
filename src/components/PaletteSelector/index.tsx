@@ -41,7 +41,7 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
   }, [isOpen, currentPaletteRef]);
 
   // Allow selecting palettes with Left/Right arrow keys
-  const handlePrevNext = (direction: 'prev' | 'next') => {
+  const handlePrevNext = useCallback((direction: 'prev' | 'next') => {
     const currentIndex = filteredPalettes.indexOf(currentPalette)
     let newIndex
 
@@ -52,7 +52,7 @@ export const PaletteSelector = ({ currentPalette, onPaletteChange, onFilteredPal
     }
 
     onPaletteChange(filteredPalettes[newIndex])
-  }
+  }, [filteredPalettes, currentPalette, onPaletteChange])
   
   useEffect(() => {
     if (filteredPalettes.length <= 1)
